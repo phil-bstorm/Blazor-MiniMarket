@@ -1,0 +1,45 @@
+﻿@using MiniMarket.Models
+
+<EditForm Model="@Model" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+
+    <div>
+        <label for="name">Name:</label>
+        <InputText id="name" @bind-Value="Model.Name" />
+    </div>
+
+    <div>
+        <label for="price">Price:</label>
+        <InputNumber id="price" @bind-Value="Model.Price" />
+    </div>
+
+    <div>
+        <label for="discount">Discount:</label>
+        <InputNumber id="discount" @bind-Value="Model.Discount" />
+    </div>
+
+    <div>
+        <label for="description">Description:</label>
+        <InputTextArea id="description" @bind-Value="Model.Description" />
+    </div>
+
+    <button type="submit">Update the product!</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public ProductCreateDTO Model { get; set; } = new ProductCreateDTO();
+
+    [Parameter]
+    public EventCallback<ProductCreateDTO> OnValidSubmit { get; set; }
+
+    private async Task HandleValidSubmit()
+    {
+        Console.WriteLine("Form submitted successfully!");
+
+        if (OnValidSubmit.HasDelegate)
+        {
+            await OnValidSubmit.InvokeAsync(Model);
+        }
+    }
+}
