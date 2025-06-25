@@ -1,5 +1,7 @@
-﻿using Microsoft.JSInterop;
+﻿using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.JSInterop;
 using MiniMarket.Models;
+using MiniMarket.States;
 using System.Net.Http.Json;
 
 namespace MiniMarket.Service
@@ -8,11 +10,13 @@ namespace MiniMarket.Service
     {
         private readonly HttpClient _httpClient;
         private readonly IJSRuntime _jsRuntime;
+        private readonly AuthenticationStateProvider _authState;
 
-        public AuthService(HttpClient httpClient, IJSRuntime jSRuntime)
+        public AuthService(IHttpClientFactory httpClientFactory, IJSRuntime jSRuntime, AuthenticationStateProvider authState)
         {
-            _httpClient = httpClient;
+            _httpClient = httpClientFactory.CreateClient("API");
             _jsRuntime = jSRuntime;
+            _authState = authState;
         }
 
         public async Task<bool> RegisterAsync(RegisterDTO registerDTO) {
@@ -37,6 +41,9 @@ namespace MiniMarket.Service
 
                     // stocker dans le localStorage (JS)
                     await _jsRuntime.InvokeVoidAsync("localStorage.setItem", "token", content.Token);
+
+                    // Notifié à l'authentication state manager qu'on est connecté
+                    (_authState as AuthState).NotifyStateChanged();
 
                     return true;
                 }

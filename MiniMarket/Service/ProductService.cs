@@ -1,10 +1,13 @@
 ﻿using MiniMarket.Mappers;
 using MiniMarket.Models;
+using System.Net.Http.Json;
 
 namespace MiniMarket.Service
 {
     public class ProductService
     {
+        private readonly HttpClient _httpClient;
+
         public List<Product> Products { get; set; } = new List<Product>() {
             new Product(1, "Apple", 2, 0, "Fresh red apples"),
             new Product(2, "Banana", 1, 0, "Ripe yellow bananas"),
@@ -14,6 +17,10 @@ namespace MiniMarket.Service
             new Product(6, "Pineapple", 6, 0, "Fresh pineapples"),
             new Product(7, "Strawberry", 7, 15, "Delicious strawberries with a 15% discount")
         };
+
+        public ProductService(IHttpClientFactory httpClientFactory) {
+            _httpClient = httpClientFactory.CreateClient("API");
+        }
 
         public Task<List<Product>> GetProductsAsync()
         {
@@ -26,14 +33,14 @@ namespace MiniMarket.Service
             return Task.FromResult(product);
         }
 
-        public Task CreateProductAsync(ProductCreateDTO product)
+        public async Task<bool> CreateProductAsync(ProductCreateDTO product)
         {
-            int id = Products.Count > 0 ? Products.Max(p => p.Id) + 1 : 1;
-            Product newProduct = product.ToProduct();
-            newProduct.Id = id;
-
-            Products.Add(newProduct);
-            return Task.CompletedTask;
+            var response = await _httpClient.PostAsJsonAsync("api/Product", product);
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            return false;
         }
 
         public Task UpdateProductAsync(Product product)

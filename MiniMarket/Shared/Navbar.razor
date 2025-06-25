@@ -1,17 +1,29 @@
-﻿<ul>
+﻿@using Microsoft.AspNetCore.Components.Authorization
+<ul>
     <li>
         <NavLink href="/">Home</NavLink>
     </li>
     <li>
         <NavLink href="/product">Products</NavLink>
     </li>
+    
     <li>
         <NavLink href="/cart">Cart</NavLink>
     </li>
-    <li>
-        <NavLink href="/register">Register</NavLink>
-    </li>
-    <li>
-        <NavLink href="/login">Login</NavLink>
-    </li>
+
+    <AuthorizeView>
+        <NotAuthorized>
+            <li>
+                <NavLink href="/register">Register</NavLink>
+            </li>
+            <li>
+                <NavLink href="/login">Login</NavLink>
+            </li>
+        </NotAuthorized>
+        <Authorized>
+            <li>
+                <button>Logout</button>
+            </li>
+        </Authorized>
+    </AuthorizeView>
 </ul>
