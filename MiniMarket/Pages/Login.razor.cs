@@ -4,7 +4,7 @@ using MiniMarket.Service;
 
 namespace MiniMarket.Pages
 {
-    public partial class Register
+    public partial class Login
     {
         [Inject]
         public AuthService AuthService { get; set; } = null!;
@@ -12,13 +12,13 @@ namespace MiniMarket.Pages
         [Inject]
         public NavigationManager NavigationManager { get; set; } = null!;
 
-        public RegisterDTO Model { get; set; } = new RegisterDTO();
+        public LoginDTO Model { get; set; } = new LoginDTO();
 
         public async Task OnSubmit()
         {
-            bool success = await AuthService.RegisterAsync(Model);
+            bool success = await AuthService.LoginAsync(Model);
             if (success) {
-                NavigationManager.NavigateTo("/login");
+                NavigationManager.NavigateTo("/");
             }
         }
     }
