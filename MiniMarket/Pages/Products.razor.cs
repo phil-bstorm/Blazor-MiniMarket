@@ -11,7 +11,7 @@ namespace MiniMarket.Pages
         [Inject]
         public CartService CartService { get; set; } = null!;
 
-        public List<Product>? ProductList { get; set; } = null;
+        public List<ProductList>? ProductList { get; set; } = null;
         public Dictionary<int, int> Quantities { get; set; } = new();
 
         protected override async Task OnInitializedAsync()
@@ -38,7 +38,7 @@ namespace MiniMarket.Pages
 
         private async Task AddToCart(int productId)
         {
-            Product? p = ProductList?.FirstOrDefault(x => x.Id == productId);
+            ProductList? p = ProductList?.FirstOrDefault(x => x.Id == productId);
             if (p is null)
             {
                 return; // Produit non trouvé

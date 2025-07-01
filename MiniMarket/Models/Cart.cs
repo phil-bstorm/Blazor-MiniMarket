@@ -7,7 +7,7 @@
 
     public class CartProduct
     {
-        public required Product Product { get; set; }
+        public required ProductList Product { get; set; }
         public required int Quantity { get; set; }
     }
 }

@@ -18,13 +18,19 @@ namespace MiniMarket.Service
             new Product(7, "Strawberry", 7, 15, "Delicious strawberries with a 15% discount")
         };
 
-        public ProductService(IHttpClientFactory httpClientFactory) {
+        public ProductService(IHttpClientFactory httpClientFactory)
+        {
             _httpClient = httpClientFactory.CreateClient("API");
         }
 
-        public Task<List<Product>> GetProductsAsync()
+        public async Task<List<ProductList>> GetProductsAsync()
         {
-            return Task.FromResult(Products);
+            List<ProductList> result = await _httpClient.GetFromJsonAsync<List<ProductList>>("api/Product");
+            if (result is not null)
+            {
+                return result;
+            }
+            return [];
         }
 
         public Task<Product?> GetProductByIdAsync(int id)
